@@ -351,6 +351,7 @@ interface ArgoContextType {
   createChat: (name: string, spaceId: string) => void;
   renameChat: (chatId: string, newName: string) => void;
   renameSpace: (spaceId: string, newName: string) => void;
+  updateSpace: (spaceId: string, updates: Partial<{ name: string; description: string }>) => void;
   renameArtifact: (artifactId: string, newName: string) => void;
   openSpaceWorkspace: (spaceId: string) => void;
   openFilesPanel: (spaceId: string) => void;
@@ -539,6 +540,10 @@ export function ArgoProvider({ children }: { children: ReactNode }) {
     setSpaces(prev => prev.map(s => s.id === spaceId ? { ...s, name: newName } : s));
   }, []);
 
+  const updateSpace = useCallback((spaceId: string, updates: Partial<{ name: string; description: string }>) => {
+    setSpaces(prev => prev.map(s => s.id === spaceId ? { ...s, ...updates } : s));
+  }, []);
+
   const renameArtifact = useCallback((artifactId: string, newName: string) => {
     setArtifacts(prev => prev.map(a => a.id === artifactId ? { ...a, name: newName } : a));
   }, []);
@@ -559,7 +564,7 @@ export function ArgoProvider({ children }: { children: ReactNode }) {
       activeChat, activeArtifact, selectedAgent, spaceArtifacts, allArtifacts,
       setActiveSpaceId, setActiveChatId, setActiveArtifactId, setSelectedAgentId,
       setIsAdmin, setRightPanelView, setAdminTab, setCenterView, setSidebarCollapsed,
-      sendMessage, createSpace, createChat, renameChat, renameSpace, renameArtifact, openSpaceWorkspace, openFilesPanel, closeFilesPanel, exitSpace, navigateToChat,
+      sendMessage, createSpace, createChat, renameChat, renameSpace, updateSpace, renameArtifact, openSpaceWorkspace, openFilesPanel, closeFilesPanel, exitSpace, navigateToChat,
     }}>
       {children}
     </ArgoContext.Provider>

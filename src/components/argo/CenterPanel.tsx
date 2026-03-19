@@ -680,7 +680,7 @@ function ArtifactsTable() {
 function SpaceWorkspaceView() {
   const {
     spaces, activeSpaceId, chats, artifacts,
-    setActiveChatId, setCenterView, createChat, renameChat, renameSpace,
+    setActiveChatId, setCenterView, createChat, renameChat, renameSpace, updateSpace,
     setActiveArtifactId, setRightPanelView, openFilesPanel,
   } = useArgo();
 
@@ -689,6 +689,7 @@ function SpaceWorkspaceView() {
   const spaceArtifacts = artifacts.filter(a => a.spaceId === activeSpaceId);
   const [editing, setEditing] = useState(false);
   const [editName, setEditName] = useState('');
+  const [editDescription, setEditDescription] = useState('');
   const [chatDisplayCount, setChatDisplayCount] = useState(20);
   const [showShareMenu, setShowShareMenu] = useState(false);
   const chatSentinelRef = useRef<HTMLDivElement>(null);
@@ -732,52 +733,60 @@ function SpaceWorkspaceView() {
       {/* Project Header */}
       <div className="flex items-start justify-between">
         <div>
-          <div className="flex items-center gap-2">
-            {editing ? (
+          {editing ? (
+            <div className="space-y-2">
               <input
                 value={editName}
                 onChange={e => setEditName(e.target.value)}
-                onKeyDown={e => {
-                  if (e.key === 'Enter') { renameSpace(activeSpaceId, editName.trim() || space.name); setEditing(false); }
-                  if (e.key === 'Escape') setEditing(false);
-                }}
-                onBlur={() => { renameSpace(activeSpaceId, editName.trim() || space.name); setEditing(false); }}
-                className="text-lg font-semibold text-foreground bg-background border border-border rounded-md px-2 py-0.5 focus:outline-none focus:ring-1 focus:ring-ring"
+                placeholder="Project name"
+                className="text-lg font-semibold text-foreground bg-background border border-border rounded-md px-2 py-1 w-full focus:outline-none focus:ring-1 focus:ring-ring"
                 autoFocus
               />
-            ) : (
-              <h1 className="text-lg font-semibold text-foreground tracking-tight">{space.name}</h1>
-            )}
-            <span className="text-sm text-muted-foreground">•</span>
-            {isShared ? <Globe className="w-3.5 h-3.5 text-muted-foreground" /> : <Lock className="w-3.5 h-3.5 text-muted-foreground" />}
-            {isOwner && !space.isDefault && (
-              <button onClick={() => { setEditName(space.name); setEditing(!editing); }} className="p-1 rounded hover:bg-accent text-muted-foreground hover:text-foreground transition-colors" title="Edit project">
-                <Pencil className="w-3.5 h-3.5" />
-              </button>
-            )}
-          </div>
-          {isShared && space.sharedBy && (
-            <p className="text-xs text-muted-foreground mt-1">Shared by {space.sharedBy}</p>
+              <textarea
+                value={editDescription}
+                onChange={e => setEditDescription(e.target.value)}
+                placeholder="Description (optional)"
+                rows={2}
+                className="text-sm text-foreground bg-background border border-border rounded-md px-2 py-1.5 w-full focus:outline-none focus:ring-1 focus:ring-ring resize-none"
+              />
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => {
+                    updateSpace(activeSpaceId, { name: editName.trim() || space.name, description: editDescription.trim() });
+                    setEditing(false);
+                  }}
+                  className="px-3 py-1 rounded-md bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors"
+                >
+                  Save
+                </button>
+                <button
+                  onClick={() => setEditing(false)}
+                  className="px-3 py-1 rounded-md text-xs text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="flex items-center gap-2">
+                <h1 className="text-lg font-semibold text-foreground tracking-tight">{space.name}</h1>
+                <span className="text-sm text-muted-foreground">•</span>
+                {isShared ? <Globe className="w-3.5 h-3.5 text-muted-foreground" /> : <Lock className="w-3.5 h-3.5 text-muted-foreground" />}
+                {isOwner && !space.isDefault && (
+                  <button onClick={() => { setEditName(space.name); setEditDescription(space.description || ''); setEditing(true); }} className="p-1 rounded hover:bg-accent text-muted-foreground hover:text-foreground transition-colors" title="Edit project">
+                    <Pencil className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+              {isShared && space.sharedBy && (
+                <p className="text-xs text-muted-foreground mt-1">Shared by {space.sharedBy}</p>
+              )}
+              {space.description && <p className="text-sm text-muted-foreground mt-1">{space.description}</p>}
+            </>
           )}
-          {space.description && <p className="text-sm text-muted-foreground mt-1">{space.description}</p>}
         </div>
         <div className="flex items-center gap-2">
-          <button
-            onClick={() => createChat('New Chat', activeSpaceId)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            New Chat
-          </button>
-          {!space.isDefault && (
-            <button
-              onClick={() => openFilesPanel(activeSpaceId)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-sm text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
-            >
-              <FileText className="w-3.5 h-3.5" />
-              Files
-            </button>
-          )}
           {isOwner && !space.isDefault && (
             <div className="relative">
               <button
@@ -834,16 +843,29 @@ function SpaceWorkspaceView() {
               )}
             </div>
           )}
+          {!space.isDefault && (
+            <button
+              onClick={() => openFilesPanel(activeSpaceId)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-sm text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+            >
+              <FileText className="w-3.5 h-3.5" />
+              Files
+            </button>
+          )}
+          <button
+            onClick={() => createChat('New Chat', activeSpaceId)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            New Chat
+          </button>
         </div>
       </div>
 
       {/* Chats */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-semibold text-foreground">Chats</h3>
-          <span className="text-xs text-muted-foreground">
-            {`${spaceChats.length} chats`}
-          </span>
+          <span className="text-xs text-muted-foreground">{spaceChats.length} chats</span>
         </div>
 
 
