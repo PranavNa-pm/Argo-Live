@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback, useRef, type ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, useRef, useEffect, type ReactNode } from 'react';
 import type { Agent, Tool, Artifact, Chat, Space, Message, ExecutionTrace, RightPanelView, AdminTab, CenterView } from '@/types/argo';
 
 // ─── Mock Data ───────────────────────────────────────────────
@@ -358,6 +358,10 @@ interface ArgoContextType {
   closeFilesPanel: () => void;
   exitSpace: () => void;
   navigateToChat: (chatId: string) => void;
+  // DEMO ONLY — remove before connecting real API
+  // This simulates loading state for the Lovable prototype.
+  // Replace with actual async loading state when connecting Supabase.
+  isLoading: boolean;
 }
 
 const ArgoContext = createContext<ArgoContextType | null>(null);
@@ -428,6 +432,13 @@ export function ArgoProvider({ children }: { children: ReactNode }) {
   const [selectedAgentId, setSelectedAgentId] = useState('general');
   const [isAdmin, setIsAdmin] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+
+  // DEMO ONLY — simulates data loading for prototype. Remove when connecting Supabase.
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 1200);
+    return () => clearTimeout(timer);
+  }, []);
   const [rightPanelView, setRightPanelView] = useState<RightPanelView>('empty');
   const [adminTab, setAdminTab] = useState<AdminTab>('agents');
   const [centerView, setCenterView] = useState<CenterView>('chat');
@@ -566,6 +577,7 @@ export function ArgoProvider({ children }: { children: ReactNode }) {
       setActiveSpaceId, setActiveChatId, setActiveArtifactId, setSelectedAgentId,
       setIsAdmin, setRightPanelView, setAdminTab, setCenterView, setSidebarCollapsed,
       sendMessage, createSpace, createChat, renameChat, renameSpace, updateSpace, renameArtifact, openSpaceWorkspace, openFilesPanel, closeFilesPanel, exitSpace, navigateToChat,
+      isLoading,
     }}>
       {children}
     </ArgoContext.Provider>
