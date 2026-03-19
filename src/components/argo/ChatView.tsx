@@ -152,19 +152,15 @@ export function ChatView() {
                   </div>
                   {/* Suggestion cards — 4 in one row */}
                   <div className="grid grid-cols-4 gap-3">
-                    {selectedAgent?.capabilities.slice(0, 4).map(c => {
-                      const IconComp = capabilityIcons[c.name] || Bot;
-                      return (
-                        <button
-                          key={c.id}
-                          onClick={() => handleCapabilityClick(c.name)}
-                          className="p-3 rounded-xl border border-border hover:border-primary/40 hover:bg-accent/50 text-left transition-all group"
-                        >
-                          <IconComp className="w-4 h-4 text-primary mb-2 group-hover:scale-110 transition-transform" />
-                          <div className="text-xs font-semibold text-foreground leading-snug">{c.name}</div>
-                        </button>
-                      );
-                    })}
+                    {selectedAgent?.capabilities.slice(0, 4).map(c => (
+                      <button
+                        key={c.id}
+                        onClick={() => handleCapabilityClick(c.name)}
+                        className="p-3 rounded-xl border border-border hover:border-primary/40 hover:bg-accent/50 text-left transition-all"
+                      >
+                        <div className="text-xs font-semibold text-foreground leading-snug">{c.name}</div>
+                      </button>
+                    ))}
                   </div>
                 </div>
               </div>

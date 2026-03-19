@@ -352,8 +352,8 @@ export function LeftPanel() {
 
               {/* ── Recent Projects ── */}
               <div className="mb-1">
-                <div className="px-2 py-2 text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">
-                  Recent Projects
+                <div className="px-2 py-1.5 text-[10px] font-medium text-muted-foreground tracking-wide">
+                  Recent projects
                 </div>
                 <div className="space-y-0.5">
                   {recentProjects.length === 0 ? (

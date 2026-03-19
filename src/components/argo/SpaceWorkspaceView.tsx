@@ -32,10 +32,11 @@ export function SpaceWorkspaceView() {
   const isOwner = space?.owner === 'You';
 
   const shareMembers = [
-    { name: 'John Smith', role: 'Pre-Sales Team', selected: false },
-    { name: 'Sarah Lee', role: 'Delivery Manager Team', selected: true },
-    { name: 'James Wilson', role: 'Pre-Sales Admin', selected: true },
-    { name: 'Alex Thompson', role: 'Admin', selected: false },
+    { name: 'Pranav Nagrani', role: 'Admin', isYou: true },
+    { name: 'John Smith', role: 'Pre-Sales Team', isYou: false },
+    { name: 'Sarah Lee', role: 'Delivery Manager Team', isYou: false },
+    { name: 'James Wilson', role: 'Pre-Sales Admin', isYou: false },
+    { name: 'Alex Thompson', role: 'Admin', isYou: false },
   ];
 
   const filteredMembers = shareSearch
@@ -228,8 +229,9 @@ export function SpaceWorkspaceView() {
                   <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                     <span className="text-xs font-medium text-primary">{m.name.charAt(0)}</span>
                   </div>
-                  <div className="flex-1 min-w-0">
+                  <div className="flex-1 min-w-0 flex items-center gap-1.5">
                     <div className="text-sm font-medium text-foreground">{m.name}</div>
+                    {m.isYou && <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary font-medium shrink-0">you</span>}
                   </div>
                   <span className="text-[10px] px-1.5 py-0.5 rounded bg-secondary text-muted-foreground shrink-0">{m.role}</span>
                 </div>
