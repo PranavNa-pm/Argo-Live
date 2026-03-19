@@ -702,7 +702,7 @@ function SpaceWorkspaceView() {
 
   const shareMembers = [
     { name: 'John Smith', role: 'Pre-Sales Team', selected: false },
-    { name: 'Sarah Lee', role: 'Delivery Manager', selected: true },
+    { name: 'Sarah Lee', role: 'Delivery Manager Team', selected: true },
     { name: 'James Wilson', role: 'Pre-Sales Admin', selected: true },
     { name: 'Alex Thompson', role: 'Admin', selected: false },
   ];
@@ -990,7 +990,7 @@ function CreateSpaceView() {
 
   const shareMembers = [
     { name: 'John Smith', role: 'Pre-Sales Team', selected: false },
-    { name: 'Sarah Lee', role: 'Delivery Manager', selected: false },
+    { name: 'Sarah Lee', role: 'Delivery Manager Team', selected: false },
     { name: 'James Wilson', role: 'Pre-Sales Admin', selected: false },
     { name: 'Alex Thompson', role: 'Admin', selected: false },
   ];
