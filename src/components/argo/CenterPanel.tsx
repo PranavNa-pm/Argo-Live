@@ -937,7 +937,19 @@ function SpaceWorkspaceView() {
         <div className="flex flex-col gap-4">
           {/* Member list */}
           <div className="flex-1">
-            <p className="text-xs text-muted-foreground mb-3">{shareMembers.length} member{shareMembers.length !== 1 ? 's' : ''}</p>
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-xs text-muted-foreground">{shareMembers.length} member{shareMembers.length !== 1 ? 's' : ''}</p>
+              {isOwner && (
+                <button
+                  onClick={() => navigator.clipboard.writeText(`https://argo.app/project/${space.id}`)}
+                  className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                  title="Copy project link — anyone with this link must log in to view"
+                >
+                  <Link2 className="w-3 h-3" />
+                  Copy link
+                </button>
+              )}
+            </div>
             <div className="space-y-0.5">
               {shareMembers.map(m => (
                 <div key={m.name} className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-accent/50 transition-colors">
@@ -953,21 +965,6 @@ function SpaceWorkspaceView() {
             </div>
           </div>
 
-          {/* Share via link — compact, always visible for owner */}
-          {isOwner && (
-            <button
-              onClick={() => navigator.clipboard.writeText(`https://argo.app/project/${space.id}`)}
-              className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg border border-border hover:bg-accent/50 transition-colors text-left w-full group"
-              title="Copy project link"
-            >
-              <Link2 className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
-              <div className="flex-1 min-w-0">
-                <div className="text-xs font-medium text-foreground">Copy project link</div>
-                <div className="text-[10px] text-muted-foreground">Anyone with this link must log in to view</div>
-              </div>
-              <Copy className="w-3 h-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
-            </button>
-          )}
         </div>
       )}
       </div>
