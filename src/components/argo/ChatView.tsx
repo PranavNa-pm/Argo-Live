@@ -93,7 +93,7 @@ export function ChatView() {
   const isEmpty = (!activeChat || activeChat.messages.length === 0) && !isTyping;
 
   return (
-    <div className="flex-1 flex flex-col h-full min-w-0 bg-card">
+    <div className="flex-1 flex flex-col h-full min-w-0">
       {/* Project Context Header */}
       {activeChat && activeSpace && !activeSpace.isDefault && (
         <div className="border-b border-border px-4 py-3">
@@ -156,9 +156,9 @@ export function ChatView() {
                       <button
                         key={c.id}
                         onClick={() => handleCapabilityClick(c.name)}
-                        className="p-3 rounded-xl border border-border hover:border-primary/40 hover:bg-accent/50 text-left transition-all"
+                        className="px-3 py-4 rounded-xl border border-border hover:border-primary/40 hover:bg-accent/50 text-center transition-all flex items-center justify-center min-h-[64px]"
                       >
-                        <div className="text-xs font-semibold text-foreground leading-snug">{c.name}</div>
+                        <div className="text-xs font-medium text-foreground leading-snug">{c.name}</div>
                       </button>
                     ))}
                   </div>
