@@ -648,7 +648,7 @@ function ArtifactsTable() {
                 <button
                   key={a.id}
                   onClick={() => handleView(a.id)}
-                  className="w-full flex items-center gap-4 px-4 py-3 rounded-lg bg-card shadow-sm hover:shadow-md hover:bg-accent/60 transition-all text-left group"
+                  className="w-full flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-black/5 transition-colors text-left group"
                 >
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-medium text-foreground truncate">{a.name}</div>
@@ -805,7 +805,7 @@ function SpaceWorkspaceView() {
                 {spaceChats
                   .filter(c => !chatSearch || c.name.toLowerCase().includes(chatSearch.toLowerCase()))
                   .slice(0, chatDisplayCount).map(c => (
-                  <div key={c.id} className="flex items-center gap-3 px-4 py-3 rounded-lg bg-card shadow-sm hover:shadow-md hover:bg-accent/60 transition-all cursor-pointer group" onClick={() => handleOpenChat(c.id)}>
+                  <div key={c.id} className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-black/5 transition-colors cursor-pointer group" onClick={() => handleOpenChat(c.id)}>
                     <div className="flex-1 min-w-0">
                       <div className="text-sm font-medium text-foreground">{c.name}</div>
                       <div className="text-xs text-muted-foreground">{c.createdAt.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}</div>
@@ -1741,7 +1741,7 @@ function WorkspaceDashboard() {
               <button
                 key={s.id}
                 onClick={() => openSpaceWorkspace(s.id)}
-                className="w-full flex items-center gap-4 px-4 py-3 rounded-lg bg-card shadow-sm hover:shadow-md hover:bg-accent/60 transition-all text-left group"
+                className="w-full flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-black/5 transition-colors text-left group"
               >
                 <div className="flex-1 min-w-0">
                   <span className="text-sm font-medium text-foreground truncate block">{s.name}</span>
