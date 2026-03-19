@@ -690,6 +690,7 @@ function SpaceWorkspaceView() {
   const [editing, setEditing] = useState(false);
   const [editName, setEditName] = useState('');
   const [editDescription, setEditDescription] = useState('');
+  const [editContext, setEditContext] = useState('');
   const [chatDisplayCount, setChatDisplayCount] = useState(20);
   const [showShareMenu, setShowShareMenu] = useState(false);
   const chatSentinelRef = useRef<HTMLDivElement>(null);
@@ -734,34 +735,56 @@ function SpaceWorkspaceView() {
       <div className="flex items-start justify-between">
         <div>
           {editing ? (
-            <div className="space-y-2">
-              <input
-                value={editName}
-                onChange={e => setEditName(e.target.value)}
-                placeholder="Project name"
-                className="text-lg font-semibold text-foreground bg-background border border-border rounded-md px-2 py-1 w-full focus:outline-none focus:ring-1 focus:ring-ring"
-                autoFocus
-              />
-              <textarea
-                value={editDescription}
-                onChange={e => setEditDescription(e.target.value)}
-                placeholder="Description (optional)"
-                rows={2}
-                className="text-sm text-foreground bg-background border border-border rounded-md px-2 py-1.5 w-full focus:outline-none focus:ring-1 focus:ring-ring resize-none"
-              />
+            <div className="space-y-3 w-full">
+              <div>
+                <label className="text-xs font-semibold text-muted-foreground block mb-1">Project Name</label>
+                <input
+                  value={editName}
+                  onChange={e => setEditName(e.target.value)}
+                  placeholder="Project name"
+                  className="w-full text-sm text-foreground bg-background border border-border rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-ring"
+                  autoFocus
+                />
+              </div>
+              <div>
+                <label className="text-xs font-semibold text-muted-foreground block mb-1">Project Description</label>
+                <textarea
+                  value={editDescription}
+                  onChange={e => setEditDescription(e.target.value)}
+                  placeholder="Brief description of this project…"
+                  rows={2}
+                  className="w-full text-sm text-foreground bg-background border border-border rounded-md px-3 py-2 resize-none focus:outline-none focus:ring-1 focus:ring-ring"
+                />
+                <p className="text-[10px] text-muted-foreground mt-1">This description is visible to project members.</p>
+              </div>
+              <div>
+                <label className="text-xs font-semibold text-muted-foreground block mb-1">Project Context <span className="text-muted-foreground/60">(optional)</span></label>
+                <textarea
+                  value={editContext}
+                  onChange={e => setEditContext(e.target.value)}
+                  placeholder="Add context about this project to help Argo understand its purpose…"
+                  rows={4}
+                  className="w-full text-sm text-foreground bg-background border border-border rounded-md px-3 py-2 resize-none focus:outline-none focus:ring-1 focus:ring-ring"
+                />
+                <p className="text-[10px] text-muted-foreground mt-1">This helps Argo understand the purpose of the project and tailor responses.</p>
+              </div>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => {
-                    updateSpace(activeSpaceId, { name: editName.trim() || space.name, description: editDescription.trim() });
+                    updateSpace(activeSpaceId, {
+                      name: editName.trim() || space.name,
+                      description: editDescription.trim(),
+                      projectContext: editContext.trim(),
+                    });
                     setEditing(false);
                   }}
-                  className="px-3 py-1 rounded-md bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors"
+                  className="px-3 py-1.5 rounded-md bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors"
                 >
                   Save
                 </button>
                 <button
                   onClick={() => setEditing(false)}
-                  className="px-3 py-1 rounded-md text-xs text-muted-foreground hover:text-foreground transition-colors"
+                  className="px-3 py-1.5 rounded-md text-xs text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Cancel
                 </button>
@@ -774,7 +797,7 @@ function SpaceWorkspaceView() {
                 <span className="text-sm text-muted-foreground">•</span>
                 {isShared ? <Globe className="w-3.5 h-3.5 text-muted-foreground" /> : <Lock className="w-3.5 h-3.5 text-muted-foreground" />}
                 {isOwner && !space.isDefault && (
-                  <button onClick={() => { setEditName(space.name); setEditDescription(space.description || ''); setEditing(true); }} className="p-1 rounded hover:bg-accent text-muted-foreground hover:text-foreground transition-colors" title="Edit project">
+                  <button onClick={() => { setEditName(space.name); setEditDescription(space.description || ''); setEditContext(space.projectContext || ''); setEditing(true); }} className="p-1 rounded hover:bg-accent text-muted-foreground hover:text-foreground transition-colors" title="Edit project">
                     <Pencil className="w-3.5 h-3.5" />
                   </button>
                 )}

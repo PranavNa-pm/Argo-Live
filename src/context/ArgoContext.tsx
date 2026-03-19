@@ -351,7 +351,7 @@ interface ArgoContextType {
   createChat: (name: string, spaceId: string) => void;
   renameChat: (chatId: string, newName: string) => void;
   renameSpace: (spaceId: string, newName: string) => void;
-  updateSpace: (spaceId: string, updates: Partial<{ name: string; description: string }>) => void;
+  updateSpace: (spaceId: string, updates: Partial<{ name: string; description: string; projectContext: string }>) => void;
   renameArtifact: (artifactId: string, newName: string) => void;
   openSpaceWorkspace: (spaceId: string) => void;
   openFilesPanel: (spaceId: string) => void;
@@ -540,7 +540,7 @@ export function ArgoProvider({ children }: { children: ReactNode }) {
     setSpaces(prev => prev.map(s => s.id === spaceId ? { ...s, name: newName } : s));
   }, []);
 
-  const updateSpace = useCallback((spaceId: string, updates: Partial<{ name: string; description: string }>) => {
+  const updateSpace = useCallback((spaceId: string, updates: Partial<{ name: string; description: string; projectContext: string }>) => {
     setSpaces(prev => prev.map(s => s.id === spaceId ? { ...s, ...updates } : s));
   }, []);
 
