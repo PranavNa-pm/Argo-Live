@@ -3,7 +3,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import {
   Plus, MessageSquare, Search, SquarePen,
   Settings, Bot, BookOpen, Users,
-  PanelLeftClose, PanelLeft, ChevronDown, ChevronRight, MoreHorizontal,
+  PanelLeftClose, PanelLeft, ChevronDown, MoreHorizontal,
   FolderOpen, Folders, Layers, LogOut, Globe, Lock, MessagesSquare
 } from 'lucide-react';
 import { useArgo } from '@/context/ArgoContext';

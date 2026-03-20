@@ -311,7 +311,7 @@ export function ChatView() {
             >
               {msg.role === 'user' ? (
                 <div className="flex flex-col items-end gap-1 max-w-[75%]">
-                  <div className="bg-secondary rounded-2xl px-4 py-2.5 text-sm text-foreground leading-[1.7] whitespace-pre-wrap">
+                  <div className="bg-muted border border-border rounded-2xl px-4 py-2.5 text-sm text-foreground leading-[1.7] whitespace-pre-wrap">
                     {msg.content}
                   </div>
                   <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">

@@ -383,7 +383,20 @@ export function ArgoProvider({ children }: { children: ReactNode }) {
   const [activeSpaceId, setActiveSpaceId] = useState<string>(MY_SPACE_ID);
   const [chats, setChats] = useState<Chat[]>([
     // General Chat (12 chats)
-    { id: 'general', name: 'PRD', spaceId: MY_SPACE_ID, messages: [{ id: 'g1-msg', role: 'user' as const, content: 'Help me draft a PRD.', timestamp: new Date('2025-03-10') }], createdAt: new Date('2025-03-10') },
+    { id: 'general', name: 'PRD', spaceId: MY_SPACE_ID, messages: [
+      { id: 'g1-1', role: 'user' as const, content: 'I need to write a PRD for a new reporting dashboard we\'re building for our sales team.', timestamp: new Date('2025-03-10T10:00:00') },
+      { id: 'g1-2', role: 'assistant' as const, content: 'Happy to help. Before we get into it — who\'s the primary audience for this dashboard? Just the sales team, or does leadership need to use it too?', agentId: 'general', agentName: 'General Agent', timestamp: new Date('2025-03-10T10:00:30') },
+      { id: 'g1-3', role: 'user' as const, content: 'Primarily sales reps and their managers. Leadership might look at it occasionally but they\'re not the main users.', timestamp: new Date('2025-03-10T10:01:15') },
+      { id: 'g1-4', role: 'assistant' as const, content: 'Got it. What\'s the core problem you\'re trying to solve? Is the team currently using spreadsheets, a different tool, or just lacking visibility altogether?', agentId: 'general', agentName: 'General Agent', timestamp: new Date('2025-03-10T10:01:45') },
+      { id: 'g1-5', role: 'user' as const, content: 'They\'re pulling data manually from Salesforce into Excel every week. It takes hours and the numbers are always slightly out of date by the time anyone sees them.', timestamp: new Date('2025-03-10T10:02:30') },
+      { id: 'g1-6', role: 'assistant' as const, content: 'That\'s a clear problem statement — manual extraction, latency, and error-prone data. A live dashboard with a direct Salesforce connection would solve all three. What metrics matter most to the team right now?', agentId: 'general', agentName: 'General Agent', timestamp: new Date('2025-03-10T10:03:00') },
+      { id: 'g1-7', role: 'user' as const, content: 'Pipeline by stage, deals closing this month, quota attainment per rep, and win/loss rate. Those are the big four.', timestamp: new Date('2025-03-10T10:03:50') },
+      { id: 'g1-8', role: 'assistant' as const, content: 'Good list. Are there any non-negotiable filters? For example, do managers need to drill down by region, product line, or rep? Or is a single unified view enough to start?', agentId: 'general', agentName: 'General Agent', timestamp: new Date('2025-03-10T10:04:30') },
+      { id: 'g1-9', role: 'user' as const, content: 'Managers definitely need to filter by rep. Region would be nice but not required for v1.', timestamp: new Date('2025-03-10T10:05:00') },
+      { id: 'g1-10', role: 'assistant' as const, content: 'That\'s a sensible scope for v1. One more thing — do you have a rough timeline in mind, and is there an existing design system we should reference, or is this greenfield?', agentId: 'general', agentName: 'General Agent', timestamp: new Date('2025-03-10T10:05:30') },
+      { id: 'g1-11', role: 'user' as const, content: 'We want to ship in 6 weeks. We use Figma and our component library is based on shadcn.', timestamp: new Date('2025-03-10T10:06:00') },
+      { id: 'g1-12', role: 'assistant' as const, content: 'Six weeks is tight but doable for a focused v1. I have enough to write a solid PRD. Let me structure it with an overview, problem statement, user personas, core features, out-of-scope items, and a rough milestone plan.', agentId: 'general', agentName: 'General Agent', timestamp: new Date('2025-03-10T10:06:30') },
+    ], createdAt: new Date('2025-03-10') },
     { id: 'general-2', name: 'VRD', spaceId: MY_SPACE_ID, messages: [{ id: 'g2-msg', role: 'user' as const, content: 'Create a VRD document.', timestamp: new Date('2025-03-09') }], createdAt: new Date('2025-03-09') },
     { id: 'general-3', name: 'How to Use Lovable', spaceId: MY_SPACE_ID, messages: [{ id: 'g3-msg', role: 'user' as const, content: 'How do I use Lovable?', timestamp: new Date('2025-03-08') }], createdAt: new Date('2025-03-08') },
     { id: 'general-4', name: 'What Does Argo Mean', spaceId: MY_SPACE_ID, messages: [{ id: 'g4-msg', role: 'user' as const, content: 'What does Argo mean?', timestamp: new Date('2025-03-07') }], createdAt: new Date('2025-03-07') },
@@ -444,7 +457,7 @@ export function ArgoProvider({ children }: { children: ReactNode }) {
   // DEMO ONLY — simulates data loading for prototype. Remove when connecting Supabase.
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 2500);
+    const timer = setTimeout(() => setIsLoading(false), 4000);
     return () => clearTimeout(timer);
   }, []);
   const [rightPanelView, setRightPanelView] = useState<RightPanelView>('empty');
