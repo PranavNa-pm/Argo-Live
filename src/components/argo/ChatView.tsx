@@ -420,11 +420,12 @@ export function ChatView() {
                       </div>
                       <textarea
                         value={feedbackComment[msg.id] || ''}
-                        onChange={e => setFeedbackComment(prev => ({ ...prev, [msg.id]: e.target.value }))}
+                        onChange={e => { if (e.target.value.length <= 200) setFeedbackComment(prev => ({ ...prev, [msg.id]: e.target.value })); }}
                         placeholder="Help us improve — describe what didn't work…"
                         rows={2}
                         className="w-full text-xs bg-background border border-border rounded-md px-2.5 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring resize-none"
                       />
+                      <p className="text-[10px] text-muted-foreground text-right -mt-1">{(feedbackComment[msg.id] || '').length}/200</p>
                       <div className="flex justify-end gap-2">
                         <button
                           onClick={() => setShowFeedbackInput(null)}
