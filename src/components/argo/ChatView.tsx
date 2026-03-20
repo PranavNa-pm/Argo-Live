@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import {
   Send, Plus, Globe, Paperclip, Bot, FileText,
   ThumbsUp, ThumbsDown, AlertCircle, X, Lock,
-  FileSignature, Table2, ScrollText, Copy, Pencil, RotateCcw,
+  FileSignature, Table2, ScrollText, Copy,
 } from 'lucide-react';
 import { useArgo } from '@/context/ArgoContext';
 import { cn } from '@/lib/utils';
@@ -361,9 +361,6 @@ export function ChatView() {
                     <button onClick={() => navigator.clipboard.writeText(msg.content)} title="Copy" className="p-1 rounded hover:bg-accent text-muted-foreground hover:text-foreground transition-colors">
                       <Copy className="w-3 h-3" />
                     </button>
-                    <button onClick={() => { setInput(msg.content); inputRef.current?.focus(); }} title="Edit" className="p-1 rounded hover:bg-accent text-muted-foreground hover:text-foreground transition-colors">
-                      <Pencil className="w-3 h-3" />
-                    </button>
                   </div>
                 </div>
               ) : (
@@ -392,9 +389,6 @@ export function ChatView() {
                   )}>
                     <button onClick={() => navigator.clipboard.writeText(msg.content)} title="Copy" className="p-1 rounded hover:bg-accent text-muted-foreground hover:text-foreground transition-colors">
                       <Copy className="w-3 h-3" />
-                    </button>
-                    <button title="Retry" className="p-1 rounded hover:bg-accent text-muted-foreground hover:text-foreground transition-colors">
-                      <RotateCcw className="w-3 h-3" />
                     </button>
                     <button
                       onClick={() => handleThumbsUp(msg.id)}
