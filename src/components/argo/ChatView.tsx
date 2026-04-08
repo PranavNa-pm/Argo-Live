@@ -357,11 +357,6 @@ export function ChatView() {
               <span className="flex-1">Group Skills</span>
               <span className="text-[10px] text-muted-foreground ml-2">Soon</span>
             </DropdownMenuItem>
-            {/* Personal Skills — coming soon */}
-            <DropdownMenuItem disabled className="opacity-40 cursor-not-allowed">
-              <span className="flex-1">Personal Skills</span>
-              <span className="text-[10px] text-muted-foreground ml-2">Soon</span>
-            </DropdownMenuItem>
           </DropdownMenuSubContent>
         </DropdownMenuSub>
         <div className="px-2 py-1.5 border-t border-border mt-0.5 space-y-0.5">
