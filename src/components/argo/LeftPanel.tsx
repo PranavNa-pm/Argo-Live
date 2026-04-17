@@ -9,7 +9,6 @@ import {
 import { useArgo } from '@/context/ArgoContext';
 import { cn } from '@/lib/utils';
 import argoBrainIcon from '@/assets/argo-brain-icon.png';
-import argoLogo from '@/assets/argo-logo.svg';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -220,7 +219,8 @@ export function LeftPanel() {
       {/* Header with logo */}
       <div className="px-4 py-3.5 border-b border-sidebar-border flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <img src={argoLogo} alt="ARGO" className="h-3 w-auto" />
+          <img src={argoBrainIcon} alt="Argo" className="h-5 w-auto" />
+          <span className="text-sm font-semibold text-foreground tracking-tight">Argo</span>
         </div>
         <button onClick={() => setSidebarCollapsed(true)} className="p-1.5 rounded-md hover:bg-accent text-muted-foreground hover:text-foreground transition-colors" title="Collapse sidebar">
           <PanelLeft className="w-4 h-4" />

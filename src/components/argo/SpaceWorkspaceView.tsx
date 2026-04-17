@@ -90,6 +90,15 @@ export function SpaceWorkspaceView() {
         <div className="flex items-center gap-2">
           {isOwner && !space.isDefault && (
             <button
+              title="Upload files to this project"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-sm text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+            >
+              <Upload className="w-3.5 h-3.5" />
+              Upload
+            </button>
+          )}
+          {isOwner && !space.isDefault && (
+            <button
               onClick={() => setShowEditModal(true)}
               title="Edit project"
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-sm text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
@@ -187,12 +196,6 @@ export function SpaceWorkspaceView() {
         <div>
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs text-muted-foreground">{(MOCK_PROJECT_FILES[activeSpaceId] || []).length} file{(MOCK_PROJECT_FILES[activeSpaceId] || []).length !== 1 ? 's' : ''}</span>
-            {isOwner && (
-              <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors text-xs font-medium" title="Upload file">
-                <Upload className="w-3.5 h-3.5" />
-                Upload
-              </button>
-            )}
           </div>
           {(MOCK_PROJECT_FILES[activeSpaceId] || []).length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
@@ -203,7 +206,10 @@ export function SpaceWorkspaceView() {
           ) : (
             <div className="space-y-0.5">
               {(MOCK_PROJECT_FILES[activeSpaceId] || []).map((f, i) => (
-                <div key={i} onClick={() => { if (f.artifactId) { setActiveArtifactId(f.artifactId); setRightPanelView('artifact'); } }} className={cn("flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors group", f.artifactId ? "hover:bg-black/5 cursor-pointer" : "cursor-default")}>
+                <div key={i} onClick={() => { if (f.artifactId) { setActiveArtifactId(f.artifactId); setRightPanelView('artifact'); } }} className={cn("flex items-start gap-3 px-3 py-2.5 rounded-lg transition-colors group", f.artifactId ? "hover:bg-black/5 cursor-pointer" : "cursor-default")}>
+                  <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center shrink-0 mt-0.5">
+                    <FileText className="w-4 h-4 text-muted-foreground" />
+                  </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-medium text-foreground truncate">{f.name}</div>
                     <div className="text-[11px] text-muted-foreground mt-0.5">

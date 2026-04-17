@@ -67,7 +67,7 @@ export function WorkspaceDashboard() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowJoinModal(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors shrink-0"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-sm text-muted-foreground hover:text-foreground hover:bg-accent transition-colors shrink-0"
             >
               <Plus className="w-3.5 h-3.5" />
               Join Project

@@ -3,8 +3,8 @@ import {
   Send, Plus, Globe, Paperclip, Bot, FileText,
   ThumbsUp, ThumbsDown, AlertCircle, X, Lock,
   FileSignature, Table2, ScrollText, Copy,
-  ChevronDown, Wrench, CheckCircle2, XCircle, Loader2, FileSearch,
-  Zap, HelpCircle,
+  ChevronDown, ChevronRight, ChevronLeft, Wrench, CheckCircle2, XCircle, Loader2, FileSearch,
+  Zap, HelpCircle, FolderOpen,
 } from 'lucide-react';
 import { useArgo } from '@/context/ArgoContext';
 import { cn } from '@/lib/utils';
@@ -19,6 +19,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ChatMessageSkeleton } from '@/components/argo/skeletons/ChatMessageSkeleton';
+import { MOCK_PROJECT_FILES } from '@/components/argo/RightPanel';
 import type { Chat, Space, ExecutionTrace, Skill } from '@/types/argo';
 
 // ─── ToolTrace Component ───────────────────────────────────────
@@ -79,7 +80,7 @@ function ToolTrace({ trace }: { trace: ExecutionTrace }) {
 
 // ─── ChatHeader ───────────────────────────────────────────────
 function ChatHeader({ chat, space }: { chat: Chat; space: Space }) {
-  const { renameChat } = useArgo();
+  const { renameChat, openFilesPanel, closeFilesPanel, rightPanelView, activeFilesSpaceId } = useArgo();
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(chat.name);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -96,37 +97,57 @@ function ChatHeader({ chat, space }: { chat: Chat; space: Space }) {
     setEditing(false);
   };
 
+  const filesActive = rightPanelView === 'files' && activeFilesSpaceId === space.id;
+
   return (
     <div className="border-b border-border px-4 py-3">
-      <div className="flex items-start gap-2">
-        {editing ? (
-          <input
-            ref={inputRef}
-            value={draft}
-            onChange={e => setDraft(e.target.value)}
-            onBlur={handleSave}
-            onKeyDown={e => { if (e.key === 'Enter') handleSave(); if (e.key === 'Escape') setEditing(false); }}
-            className="text-base font-semibold text-foreground bg-transparent border-b border-primary outline-none w-full max-w-sm"
-            autoFocus
-          />
-        ) : (
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex-1 min-w-0">
+          {editing ? (
+            <input
+              ref={inputRef}
+              value={draft}
+              onChange={e => setDraft(e.target.value)}
+              onBlur={handleSave}
+              onKeyDown={e => { if (e.key === 'Enter') handleSave(); if (e.key === 'Escape') setEditing(false); }}
+              className="text-base font-semibold text-foreground bg-transparent border-b border-primary outline-none w-full max-w-sm"
+              autoFocus
+            />
+          ) : (
+            <button
+              onClick={handleStartEdit}
+              className="text-base font-semibold text-foreground hover:text-foreground/80 transition-colors text-left"
+              title="Click to rename"
+            >
+              {chat.name}
+            </button>
+          )}
+          <div className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">
+            {space.isDefault ? (
+              <span>General Chat</span>
+            ) : (
+              <>
+                <span>{space.name}</span>
+                {space.visibility === 'shared' ? <Globe className="w-3 h-3" /> : <Lock className="w-3 h-3" />}
+              </>
+            )}
+          </div>
+        </div>
+        {!space.isDefault && (
           <button
-            onClick={handleStartEdit}
-            className="text-base font-semibold text-foreground hover:text-foreground/80 transition-colors text-left"
-            title="Click to rename"
+            onClick={() => filesActive ? closeFilesPanel() : openFilesPanel(space.id)}
+            className={cn(
+              "flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium transition-colors shrink-0",
+              filesActive
+                ? "bg-primary/80 text-primary-foreground"
+                : "bg-primary text-primary-foreground hover:bg-primary/90"
+            )}
+            title="Project files"
           >
-            {chat.name}
+            <FolderOpen className="w-3.5 h-3.5" />
+            Files
+            {filesActive ? <ChevronRight className="w-3 h-3" /> : <ChevronLeft className="w-3 h-3" />}
           </button>
-        )}
-      </div>
-      <div className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1">
-        {space.isDefault ? (
-          <span>General Chat</span>
-        ) : (
-          <>
-            <span>{space.name}</span>
-            {space.visibility === 'shared' ? <Globe className="w-3 h-3" /> : <Lock className="w-3 h-3" />}
-          </>
         )}
       </div>
     </div>
@@ -147,10 +168,20 @@ export function ChatView() {
     activeChat, selectedAgent, artifacts,
     sendMessage, isTyping, setActiveArtifactId, setRightPanelView,
     activeSpaceId, spaces, skills,
-    isLoading,
+    isLoading, openFilesPanel, closeFilesPanel,
   } = useArgo();
 
   const activeSpace = spaces.find(s => s.id === (activeChat?.spaceId ?? activeSpaceId));
+
+  // Auto-open files panel for project chats, close for general chat
+  useEffect(() => {
+    if (!activeSpace) return;
+    if (activeSpace.isDefault) {
+      closeFilesPanel();
+    } else {
+      openFilesPanel(activeSpace.id);
+    }
+  }, [activeSpace?.id]);
 
   const [input, setInput] = useState('');
   const [showPlus, setShowPlus] = useState(false);

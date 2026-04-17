@@ -160,28 +160,18 @@ export function FilesPanel() {
   return (
     <div className="fixed inset-0 z-40 w-full md:relative md:inset-auto md:z-auto md:w-[420px] md:min-w-[360px] h-screen bg-background panel-border-left flex flex-col overflow-hidden animate-slide-in-right">
       {/* Header */}
-      <div className="px-4 py-3 border-b border-border space-y-2.5">
+      <div className="px-4 py-3 border-b border-border">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 min-w-0">
-            <FolderOpen className="w-4 h-4 text-primary shrink-0" />
-            <h2 className="text-sm font-semibold text-foreground truncate">Files — {space.name}</h2>
+          <div className="min-w-0">
+            <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide flex items-center gap-1">
+              <FolderOpen className="w-3 h-3" />
+              Files · {filtered.length}
+            </p>
+            <h2 className="text-sm font-semibold text-foreground tracking-tight truncate mt-0.5">{space.name}</h2>
           </div>
           <button onClick={closeFilesPanel} className="p-1 rounded hover:bg-accent text-muted-foreground hover:text-foreground transition-colors">
             <X className="w-4 h-4" />
           </button>
-        </div>
-
-
-        {/* Upload + count */}
-        <div className="flex items-center justify-between">
-          <span className="text-xs text-muted-foreground">{filtered.length} file{filtered.length !== 1 ? 's' : ''}</span>
-          {isOwner ? (
-            <button className="p-1.5 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors" title="Upload file">
-              <Upload className="w-3.5 h-3.5" />
-            </button>
-          ) : (
-            <span className="text-[10px] text-muted-foreground italic">View & download only</span>
-          )}
         </div>
       </div>
 
@@ -226,12 +216,18 @@ export function FilesPanel() {
         )}
       </div>
 
-      {/* Footer */}
-      <div className="px-4 py-2.5 border-t border-border">
-        <p className="text-[10px] text-muted-foreground text-center">
-          {isOwner ? 'You can upload, view, download, and delete files.' : 'You can view and download files. Only the project owner can upload or delete.'}
-        </p>
-      </div>
+      {/* Fixed upload footer — owners only */}
+      {isOwner && (
+        <div className="px-4 py-3 border-t border-border shrink-0">
+          <button
+            className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 text-sm font-medium transition-colors"
+            title="PDF, DOCX, PPTX, XLSX, TXT, PNG · max 50 MB each"
+          >
+            <Upload className="w-3.5 h-3.5" />
+            Upload
+          </button>
+        </div>
+      )}
     </div>
   );
 }

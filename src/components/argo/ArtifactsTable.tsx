@@ -143,7 +143,7 @@ export function ArtifactsTable() {
               const chat = chats.find(c => c.id === a.chatId);
               const spaceName = space?.isDefault ? 'General Chat' : space?.name || '—';
               const chatName = chat?.name || '—';
-              const dotColor = a.artifactType === 'markdown' ? 'bg-primary' : a.artifactType === 'html' ? 'bg-orange-400' : 'bg-purple-400';
+              const dotColor = a.artifactType === 'markdown' ? 'bg-primary' : a.artifactType === 'html' ? 'bg-muted-foreground' : 'bg-primary/40';
               return (
                 <button
                   key={a.id}
