@@ -218,9 +218,9 @@ export function FilesPanel() {
 
       {/* Fixed upload footer — owners only */}
       {isOwner && (
-        <div className="px-4 py-3 border-t border-border shrink-0">
+        <div className="px-4 py-3 border-t border-border shrink-0 flex justify-center">
           <button
-            className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 text-sm font-medium transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 text-sm font-medium transition-colors"
             title="PDF, DOCX, PPTX, XLSX, TXT, PNG · max 50 MB each"
           >
             <Upload className="w-3.5 h-3.5" />
