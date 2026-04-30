@@ -10,10 +10,77 @@ const generateShareCode = () => Math.random().toString(36).slice(2, 6) + Math.ra
 
 // DEMO ONLY — remove when connecting backend
 export const SKILLS: Skill[] = [
-  { id: 'skill-proposal', name: 'Proposal generator', description: 'Generates structured proposal outlines for client engagements.', scope: 'org' },
-  { id: 'skill-sow', name: 'SOW drafter', description: 'Drafts statements of work with deliverables and terms.', scope: 'org' },
-  { id: 'skill-exec-summary', name: 'Executive summary', description: 'Creates concise executive summaries for leadership.', scope: 'org' },
-  { id: 'skill-comparison', name: 'Company comparison', description: 'Generates structured company comparison tables.', scope: 'org' },
+  {
+    id: 'skill-proposal',
+    name: 'Proposal generator',
+    description: 'Generates structured proposal outlines for client engagements, including phases, team composition, and investment summary.',
+    scope: 'org',
+    instructions: 'Generate a multi-phase proposal outline. Always include: executive summary, client context, phased approach, team composition, investment summary, success metrics, and next steps. Use markdown tables for team and investment sections.',
+    tools: [
+      { id: 'knowledge-retrieval', name: 'Knowledge Retrieval', description: 'Searches internal templates and past proposals.' },
+      { id: 'structured-gen', name: 'Structured Artifact Generator', description: 'Generates structured markdown.' },
+    ],
+    references: [
+      { title: 'Proposal methodology v3' },
+      { title: 'Pricing guide 2024' },
+      { title: 'Client engagement template' },
+    ],
+    assets: [
+      { name: 'proposal-template.md', type: 'Markdown' },
+      { name: 'pricing-rate-card.xlsx', type: 'Excel' },
+    ],
+  },
+  {
+    id: 'skill-sow',
+    name: 'SOW drafter',
+    description: 'Drafts statements of work with deliverables, acceptance criteria, assumptions, and commercial terms.',
+    scope: 'org',
+    instructions: 'Draft a Statement of Work that includes scope, deliverables table (with acceptance criteria), assumptions, timeline, and commercial terms (billing, payment, change requests).',
+    tools: [
+      { id: 'knowledge-retrieval', name: 'Knowledge Retrieval', description: 'Pulls from past SOWs and templates.' },
+      { id: 'structured-gen', name: 'Structured Artifact Generator', description: 'Generates structured markdown.' },
+    ],
+    references: [
+      { title: 'SOW template v2' },
+      { title: 'Rate card 2024' },
+    ],
+    assets: [
+      { name: 'sow-master-template.docx', type: 'Word' },
+    ],
+  },
+  {
+    id: 'skill-exec-summary',
+    name: 'Executive summary',
+    description: 'Creates concise executive summaries tailored for leadership audiences.',
+    scope: 'org',
+    instructions: 'Produce a one-page executive summary covering strategic context, recommended approach, key differentiators, investment & ROI, and risk mitigation. Avoid jargon.',
+    tools: [
+      { id: 'knowledge-retrieval', name: 'Knowledge Retrieval', description: 'Searches internal context.' },
+      { id: 'structured-gen', name: 'Structured Artifact Generator', description: 'Generates structured markdown.' },
+    ],
+    references: [
+      { title: 'Engagement template' },
+    ],
+    assets: [],
+  },
+  {
+    id: 'skill-comparison',
+    name: 'Company comparison',
+    description: 'Generates structured company comparison tables across industry, revenue, products, and recent news.',
+    scope: 'group',
+    group: 'Research',
+    instructions: 'Build a comparison table for the named companies. Columns: industry, HQ, revenue, employees, products, recent news. Use web search for the latest data.',
+    tools: [
+      { id: 'web-search', name: 'Web Search', description: 'Searches the web for company data.' },
+      { id: 'structured-gen', name: 'Structured Artifact Generator', description: 'Generates the comparison markdown.' },
+    ],
+    references: [
+      { title: 'Company research playbook' },
+    ],
+    assets: [
+      { name: 'comparison-template.md', type: 'Markdown' },
+    ],
+  },
 ];
 
 export const TOOLS: Tool[] = [
@@ -353,6 +420,8 @@ interface ArgoContextType {
   spaceArtifacts: Artifact[];
   allArtifacts: Artifact[];
   skills: Skill[];
+  activeSkillId: string | null;
+  setActiveSkillId: (id: string | null) => void;
 
   setActiveSpaceId: (id: string) => void;
   setActiveChatId: (id: string | null) => void;
@@ -784,6 +853,7 @@ If Phase 1 cutover has not completed by **June 1, 2025**, the following triggers
   const [adminTab, setAdminTab] = useState<AdminTab>('agents');
   const [centerView, setCenterView] = useState<CenterView>('chat');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [activeSkillId, setActiveSkillId] = useState<string | null>(null);
 
   const artifactCounter = useRef(0);
 
@@ -924,6 +994,7 @@ If Phase 1 cutover has not completed by **June 1, 2025**, the following triggers
       spaces, activeSpaceId, chats, activeChatId, artifacts, activeArtifactId, activeFilesSpaceId,
       selectedAgentId, isAdmin, isTyping, rightPanelView, adminTab, centerView, sidebarCollapsed,
       activeChat, activeArtifact, selectedAgent, spaceArtifacts, allArtifacts, skills: SKILLS,
+      activeSkillId, setActiveSkillId,
       setActiveSpaceId, setActiveChatId, setActiveArtifactId, setSelectedAgentId,
       setIsAdmin, setRightPanelView, setAdminTab, setCenterView, setSidebarCollapsed,
       sendMessage, createSpace, createChat, renameChat, renameSpace, updateSpace, renameArtifact, openSpaceWorkspace, openFilesPanel, closeFilesPanel, exitSpace, navigateToChat,

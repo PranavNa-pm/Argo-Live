@@ -9,6 +9,7 @@ import { ArtifactsTable } from '@/components/argo/ArtifactsTable';
 import { SpaceWorkspaceView } from '@/components/argo/SpaceWorkspaceView';
 import { WorkspaceDashboard } from '@/components/argo/WorkspaceDashboard';
 import { ChatView } from '@/components/argo/ChatView';
+import { SkillsView } from '@/components/argo/SkillsView';
 import { CreateProjectModal } from '@/components/argo/CreateProjectModal';
 import { JoinProjectModal } from '@/components/argo/JoinProjectModal';
 
@@ -283,6 +284,7 @@ export function CenterPanel() {
   if (centerView === 'new-space') return wrap(<CreateSpaceView />);
   if (centerView === 'projects') return wrap(<WorkspaceDashboard />);
   if (centerView === 'space-workspace') return wrap(<SpaceWorkspaceView />);
+  if (centerView === 'skills') return wrap(<SkillsView />);
 
   // ChatView has its own header — don't double-wrap
   return (
