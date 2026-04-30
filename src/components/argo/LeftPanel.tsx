@@ -4,7 +4,7 @@ import {
   Plus, MessageSquare, Search, SquarePen,
   Settings, Bot, BookOpen, Users,
   PanelLeftClose, PanelLeft, ChevronDown, MoreHorizontal,
-  FolderOpen, Folders, Layers, LogOut, Globe, Lock, MessagesSquare, Sparkles
+  FolderOpen, Folders, Layers, LogOut, Globe, Lock, MessagesSquare, Zap
 } from 'lucide-react';
 import { useArgo } from '@/context/ArgoContext';
 import { cn } from '@/lib/utils';
@@ -362,7 +362,7 @@ export function LeftPanel() {
                     : "text-sidebar-foreground hover:bg-accent/60"
                 )}
               >
-                <Sparkles className="w-3.5 h-3.5" />
+                <Zap className="w-3.5 h-3.5" />
                 <span>Skills</span>
               </button>
 
