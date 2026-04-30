@@ -9,6 +9,7 @@ import { ArtifactsTable } from '@/components/argo/ArtifactsTable';
 import { SpaceWorkspaceView } from '@/components/argo/SpaceWorkspaceView';
 import { WorkspaceDashboard } from '@/components/argo/WorkspaceDashboard';
 import { ChatView } from '@/components/argo/ChatView';
+import { SkillsView } from '@/components/argo/SkillsView';
 import { CreateProjectModal } from '@/components/argo/CreateProjectModal';
 import { JoinProjectModal } from '@/components/argo/JoinProjectModal';
 

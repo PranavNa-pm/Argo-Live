@@ -4,7 +4,7 @@ import {
   Plus, MessageSquare, Search, SquarePen,
   Settings, Bot, BookOpen, Users,
   PanelLeftClose, PanelLeft, ChevronDown, MoreHorizontal,
-  FolderOpen, Folders, Layers, LogOut, Globe, Lock, MessagesSquare
+  FolderOpen, Folders, Layers, LogOut, Globe, Lock, MessagesSquare, Sparkles
 } from 'lucide-react';
 import { useArgo } from '@/context/ArgoContext';
 import { cn } from '@/lib/utils';
@@ -346,6 +346,24 @@ export function LeftPanel() {
               >
                 <Layers className="w-3.5 h-3.5" />
                 <span>Artifacts</span>
+              </button>
+
+              {/* Skills */}
+              <button
+                onClick={() => {
+                  setCenterView('skills');
+                  setActiveArtifactId(null);
+                  setRightPanelView('empty');
+                }}
+                className={cn(
+                  "w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors",
+                  centerView === 'skills'
+                    ? "bg-accent text-foreground font-semibold"
+                    : "text-sidebar-foreground hover:bg-accent/60"
+                )}
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Skills</span>
               </button>
 
               {/* Zone divider */}
