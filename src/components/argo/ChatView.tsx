@@ -1,13 +1,34 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from "react";
 import {
-  Send, Plus, Globe, Paperclip, Bot, FileText,
-  ThumbsUp, ThumbsDown, AlertCircle, X, Lock,
-  FileSignature, Table2, ScrollText, Copy,
-  ChevronDown, ChevronRight, ChevronLeft, Wrench, CheckCircle2, XCircle, Loader2, FileSearch,
-  Zap, HelpCircle, FolderOpen,
-} from 'lucide-react';
-import { useArgo } from '@/context/ArgoContext';
-import { cn } from '@/lib/utils';
+  Send,
+  Plus,
+  Globe,
+  Paperclip,
+  Bot,
+  FileText,
+  ThumbsUp,
+  ThumbsDown,
+  AlertCircle,
+  X,
+  Lock,
+  FileSignature,
+  Table2,
+  ScrollText,
+  Copy,
+  ChevronDown,
+  ChevronRight,
+  ChevronLeft,
+  Wrench,
+  CheckCircle2,
+  XCircle,
+  Loader2,
+  FileSearch,
+  Zap,
+  HelpCircle,
+  FolderOpen,
+} from "lucide-react";
+import { useArgo } from "@/context/ArgoContext";
+import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,22 +38,22 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { ChatMessageSkeleton } from '@/components/argo/skeletons/ChatMessageSkeleton';
-import { MOCK_PROJECT_FILES } from '@/components/argo/RightPanel';
-import type { Chat, Space, ExecutionTrace, Skill } from '@/types/argo';
+} from "@/components/ui/dropdown-menu";
+import { ChatMessageSkeleton } from "@/components/argo/skeletons/ChatMessageSkeleton";
+import { MOCK_PROJECT_FILES } from "@/components/argo/RightPanel";
+import type { Chat, Space, ExecutionTrace, Skill } from "@/types/argo";
 
 // ─── ToolTrace Component ───────────────────────────────────────
 // Created: 2026-03-24
 function ToolTrace({ trace }: { trace: ExecutionTrace }) {
   const [expanded, setExpanded] = useState(false);
   const toolCount = trace.tools?.length ?? trace.toolsUsed.length;
-  const tools = trace.tools ?? trace.toolsUsed.map(n => ({ name: n, status: 'success' as const }));
+  const tools = trace.tools ?? trace.toolsUsed.map((n) => ({ name: n, status: "success" as const }));
 
   return (
     <div className="mt-2 mb-1">
       <button
-        onClick={() => setExpanded(v => !v)}
+        onClick={() => setExpanded((v) => !v)}
         className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
       >
         <Wrench className="w-3 h-3" />
@@ -44,15 +65,27 @@ function ToolTrace({ trace }: { trace: ExecutionTrace }) {
           {tools.map((t, i) => (
             <div key={i} className="flex items-center justify-between gap-2 text-xs">
               <div className="flex items-center gap-2">
-                {t.status === 'running'
-                  ? <Loader2 className="w-3 h-3 text-primary animate-spin shrink-0" />
-                  : t.status === 'failed'
-                  ? <XCircle className="w-3 h-3 text-destructive shrink-0" />
-                  : <CheckCircle2 className="w-3 h-3 text-green-500 shrink-0" />}
+                {t.status === "running" ? (
+                  <Loader2 className="w-3 h-3 text-primary animate-spin shrink-0" />
+                ) : t.status === "failed" ? (
+                  <XCircle className="w-3 h-3 text-destructive shrink-0" />
+                ) : (
+                  <CheckCircle2 className="w-3 h-3 text-green-500 shrink-0" />
+                )}
                 <span className="text-foreground">{t.name}</span>
               </div>
-              <span className={cn("text-muted-foreground", t.status === 'failed' && 'text-destructive', t.status === 'running' && 'text-primary')}>
-                {t.status === 'running' ? 'Running…' : t.status === 'failed' ? `Failed${t.error ? ` — ${t.error}` : ''}` : 'Success'}
+              <span
+                className={cn(
+                  "text-muted-foreground",
+                  t.status === "failed" && "text-destructive",
+                  t.status === "running" && "text-primary",
+                )}
+              >
+                {t.status === "running"
+                  ? "Running…"
+                  : t.status === "failed"
+                    ? `Failed${t.error ? ` — ${t.error}` : ""}`
+                    : "Success"}
               </span>
             </div>
           ))}
@@ -63,14 +96,28 @@ function ToolTrace({ trace }: { trace: ExecutionTrace }) {
                 Documents retrieved
               </div>
               {trace.documentsRetrieved.map((d, i) => (
-                <div key={i} className="text-xs text-muted-foreground pl-1">{d}</div>
+                <div key={i} className="text-xs text-muted-foreground pl-1">
+                  {d}
+                </div>
               ))}
             </div>
           )}
           <div className="pt-2 border-t border-border grid grid-cols-3 gap-2 text-xs text-muted-foreground">
-            <div><span className="font-medium text-foreground">Model</span><br />{trace.model}</div>
-            <div><span className="font-medium text-foreground">Tokens</span><br />{(trace.tokenUsage.input + trace.tokenUsage.output).toLocaleString()}</div>
-            <div><span className="font-medium text-foreground">Cost</span><br />{trace.costEstimate}</div>
+            <div>
+              <span className="font-medium text-foreground">Model</span>
+              <br />
+              {trace.model}
+            </div>
+            <div>
+              <span className="font-medium text-foreground">Tokens</span>
+              <br />
+              {(trace.tokenUsage.input + trace.tokenUsage.output).toLocaleString()}
+            </div>
+            <div>
+              <span className="font-medium text-foreground">Cost</span>
+              <br />
+              {trace.costEstimate}
+            </div>
           </div>
         </div>
       )}
@@ -97,7 +144,7 @@ function ChatHeader({ chat, space }: { chat: Chat; space: Space }) {
     setEditing(false);
   };
 
-  const filesActive = rightPanelView === 'files' && activeFilesSpaceId === space.id;
+  const filesActive = rightPanelView === "files" && activeFilesSpaceId === space.id;
 
   return (
     <div className="border-b border-border px-4 py-3">
@@ -107,9 +154,12 @@ function ChatHeader({ chat, space }: { chat: Chat; space: Space }) {
             <input
               ref={inputRef}
               value={draft}
-              onChange={e => setDraft(e.target.value)}
+              onChange={(e) => setDraft(e.target.value)}
               onBlur={handleSave}
-              onKeyDown={e => { if (e.key === 'Enter') handleSave(); if (e.key === 'Escape') setEditing(false); }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleSave();
+                if (e.key === "Escape") setEditing(false);
+              }}
               className="text-base font-semibold text-foreground bg-transparent border-b border-primary outline-none w-full max-w-sm"
               autoFocus
             />
@@ -128,19 +178,19 @@ function ChatHeader({ chat, space }: { chat: Chat; space: Space }) {
             ) : (
               <>
                 <span>{space.name}</span>
-                {space.visibility === 'shared' ? <Globe className="w-3 h-3" /> : <Lock className="w-3 h-3" />}
+                {space.visibility === "shared" ? <Globe className="w-3 h-3" /> : <Lock className="w-3 h-3" />}
               </>
             )}
           </div>
         </div>
         {!space.isDefault && (
           <button
-            onClick={() => filesActive ? closeFilesPanel() : openFilesPanel(space.id)}
+            onClick={() => (filesActive ? closeFilesPanel() : openFilesPanel(space.id))}
             className={cn(
               "flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium transition-colors shrink-0",
               filesActive
                 ? "bg-primary/80 text-primary-foreground"
-                : "bg-primary text-primary-foreground hover:bg-primary/90"
+                : "bg-primary text-primary-foreground hover:bg-primary/90",
             )}
             title="Project files"
           >
@@ -156,7 +206,7 @@ function ChatHeader({ chat, space }: { chat: Chat; space: Space }) {
 
 const MAX_FILES = 5;
 const MAX_FILE_SIZE_MB = 2;
-const ALLOWED_EXTENSIONS = ['.pdf', '.docx', '.pptx', '.txt', '.xlsx', '.png'];
+const ALLOWED_EXTENSIONS = [".pdf", ".docx", ".pptx", ".txt", ".xlsx", ".png"];
 
 interface AttachedFile {
   name: string;
@@ -165,13 +215,22 @@ interface AttachedFile {
 
 export function ChatView() {
   const {
-    activeChat, selectedAgent, artifacts,
-    sendMessage, isTyping, setActiveArtifactId, setRightPanelView,
-    activeSpaceId, spaces, skills,
-    isLoading, openFilesPanel, closeFilesPanel,
+    activeChat,
+    selectedAgent,
+    artifacts,
+    sendMessage,
+    isTyping,
+    setActiveArtifactId,
+    setRightPanelView,
+    activeSpaceId,
+    spaces,
+    skills,
+    isLoading,
+    openFilesPanel,
+    closeFilesPanel,
   } = useArgo();
 
-  const activeSpace = spaces.find(s => s.id === (activeChat?.spaceId ?? activeSpaceId));
+  const activeSpace = spaces.find((s) => s.id === (activeChat?.spaceId ?? activeSpaceId));
 
   // Auto-open files panel for project chats, close for general chat
   useEffect(() => {
@@ -183,13 +242,13 @@ export function ChatView() {
     }
   }, [activeSpace?.id]);
 
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
   const [showPlus, setShowPlus] = useState(false);
   const [webSearchEnabled, setWebSearchEnabled] = useState(false);
   const [activeSkill, setActiveSkill] = useState<Skill | null>(null);
   const [attachedFiles, setAttachedFiles] = useState<AttachedFile[]>([]);
   const [fileError, setFileError] = useState<string | null>(null);
-  const [feedbackState, setFeedbackState] = useState<Record<string, 'up' | 'down' | null>>({});
+  const [feedbackState, setFeedbackState] = useState<Record<string, "up" | "down" | null>>({});
   const [feedbackComment, setFeedbackComment] = useState<Record<string, string>>({});
   const [showFeedbackInput, setShowFeedbackInput] = useState<string | null>(null);
   const [sendError, setSendError] = useState<string | null>(null);
@@ -198,7 +257,7 @@ export function ChatView() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [activeChat?.messages, isTyping]);
 
   // Auto-clear file error after 4 seconds
@@ -213,21 +272,24 @@ export function ChatView() {
     setSendError(null);
     try {
       sendMessage(input.trim());
-      setInput('');
-      if (inputRef.current) inputRef.current.style.height = 'auto';
+      setInput("");
+      if (inputRef.current) inputRef.current.style.height = "auto";
     } catch {
-      setSendError('Failed to send message. Please try again.');
+      setSendError("Failed to send message. Please try again.");
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
   };
 
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value);
-    e.target.style.height = 'auto';
-    e.target.style.height = Math.min(e.target.scrollHeight, 160) + 'px';
+    e.target.style.height = "auto";
+    e.target.style.height = Math.min(e.target.scrollHeight, 160) + "px";
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -236,7 +298,7 @@ export function ChatView() {
     let error: string | null = null;
 
     for (const file of incoming) {
-      const ext = '.' + (file.name.split('.').pop() || '').toLowerCase();
+      const ext = "." + (file.name.split(".").pop() || "").toLowerCase();
       if (!ALLOWED_EXTENSIONS.includes(ext)) {
         error = `"${file.name}" — unsupported type. Allowed: PDF, DOCX, PPTX, TXT, XLSX, PNG`;
         continue;
@@ -249,39 +311,38 @@ export function ChatView() {
         error = `Max ${MAX_FILES} files per chat`;
         break;
       }
-      const sizeStr = file.size >= 1024 * 1024
-        ? `${(file.size / 1024 / 1024).toFixed(1)} MB`
-        : `${Math.round(file.size / 1024)} KB`;
+      const sizeStr =
+        file.size >= 1024 * 1024 ? `${(file.size / 1024 / 1024).toFixed(1)} MB` : `${Math.round(file.size / 1024)} KB`;
       results.push({ name: file.name, size: sizeStr });
     }
 
-    if (results.length) setAttachedFiles(prev => [...prev, ...results]);
+    if (results.length) setAttachedFiles((prev) => [...prev, ...results]);
     if (error) setFileError(error);
-    e.target.value = '';
+    e.target.value = "";
   };
 
   const removeFile = (idx: number) => {
-    setAttachedFiles(prev => prev.filter((_, i) => i !== idx));
+    setAttachedFiles((prev) => prev.filter((_, i) => i !== idx));
     setFileError(null);
   };
 
   const handleThumbsUp = (msgId: string) => {
-    setFeedbackState(prev => ({ ...prev, [msgId]: 'up' }));
+    setFeedbackState((prev) => ({ ...prev, [msgId]: "up" }));
     setShowFeedbackInput(null);
   };
 
   const handleThumbsDown = (msgId: string) => {
-    setFeedbackState(prev => ({ ...prev, [msgId]: 'down' }));
+    setFeedbackState((prev) => ({ ...prev, [msgId]: "down" }));
     setShowFeedbackInput(msgId);
   };
 
   const handleCapabilityClick = (capName: string) => {
     const prompts: Record<string, string> = {
-      'General Assistance': 'Help me with a task',
-      'Generate Proposal Outline': 'Generate a proposal outline for Client X in retail analytics',
-      'Draft SOW': 'Draft a statement of work for an analytics platform implementation',
-      'Create Executive Summary': 'Create an executive summary for our latest engagement',
-      'Generate Company Comparison': 'Compare Shopify, BigCommerce, and WooCommerce',
+      "General Assistance": "Help me with a task",
+      "Generate Proposal Outline": "Generate a proposal outline for Client X in retail analytics",
+      "Draft SOW": "Draft a statement of work for an analytics platform implementation",
+      "Create Executive Summary": "Create an executive summary for our latest engagement",
+      "Generate Company Comparison": "Compare Shopify, BigCommerce, and WooCommerce",
     };
     setInput(prompts[capName] || `Help me with: ${capName}`);
     inputRef.current?.focus();
@@ -289,11 +350,11 @@ export function ChatView() {
 
   // Capability icons (kept for future use)
   const capabilityIcons: Record<string, typeof FileSignature> = {
-    'General Assistance': Bot,
-    'Generate Proposal Outline': FileSignature,
-    'Draft SOW': ScrollText,
-    'Create Executive Summary': FileText,
-    'Generate Company Comparison': Table2,
+    "General Assistance": Bot,
+    "Generate Proposal Outline": FileSignature,
+    "Draft SOW": ScrollText,
+    "Create Executive Summary": FileText,
+    "Generate Company Comparison": Table2,
   };
 
   const hasActiveTools = webSearchEnabled || attachedFiles.length > 0 || activeSkill !== null;
@@ -301,56 +362,80 @@ export function ChatView() {
   const isEmpty = (!activeChat || activeChat.messages.length === 0) && !isTyping;
 
   // Active pills shown above the textarea
-  const ActivePills = () => (hasActiveTools || fileError) ? (
-    <div className="flex items-start gap-1.5 px-3 pt-2 pb-0 flex-wrap">
-      {webSearchEnabled && (
-        <span className="inline-flex items-center gap-1 text-[11px] bg-primary/10 border border-primary/30 text-primary rounded-full px-2 py-0.5">
-          <Globe className="w-3 h-3 shrink-0" />
-          Web search
-          <button onClick={() => setWebSearchEnabled(false)} className="ml-0.5 hover:text-primary/60 transition-colors" aria-label="Remove web search">
-            <X className="w-3 h-3" />
-          </button>
-        </span>
-      )}
-      {activeSkill && (
-        <span className="inline-flex items-center gap-1 text-[11px] bg-primary/10 border border-primary/30 text-primary rounded-full px-2 py-0.5">
-          <Zap className="w-3 h-3 shrink-0" />
-          {activeSkill.name}
-          <button onClick={() => setActiveSkill(null)} className="ml-0.5 hover:text-primary/60 transition-colors" aria-label={`Remove ${activeSkill.name}`}>
-            <X className="w-3 h-3" />
-          </button>
-        </span>
-      )}
-      {attachedFiles.map((f, i) => (
-        <span key={i} className="inline-flex items-center gap-1 text-[11px] bg-secondary border border-border text-foreground rounded-full px-2 py-0.5 max-w-[220px]">
-          <Paperclip className="w-3 h-3 shrink-0" />
-          <span className="truncate">{f.name}</span>
-          <span className="text-muted-foreground shrink-0 ml-0.5">{f.size}</span>
-          <button onClick={() => removeFile(i)} className="ml-0.5 text-muted-foreground hover:text-foreground transition-colors shrink-0" aria-label={`Remove ${f.name}`}>
-            <X className="w-3 h-3" />
-          </button>
-        </span>
-      ))}
-      {fileError && (
-        <span className="inline-flex items-center gap-1 text-[11px] text-destructive animate-fade-in">
-          <AlertCircle className="w-3 h-3 shrink-0" />
-          {fileError}
-        </span>
-      )}
-    </div>
-  ) : null;
+  const ActivePills = () =>
+    hasActiveTools || fileError ? (
+      <div className="flex items-start gap-1.5 px-3 pt-2 pb-0 flex-wrap">
+        {webSearchEnabled && (
+          <span className="inline-flex items-center gap-1 text-[11px] bg-primary/10 border border-primary/30 text-primary rounded-full px-2 py-0.5">
+            <Globe className="w-3 h-3 shrink-0" />
+            Web search
+            <button
+              onClick={() => setWebSearchEnabled(false)}
+              className="ml-0.5 hover:text-primary/60 transition-colors"
+              aria-label="Remove web search"
+            >
+              <X className="w-3 h-3" />
+            </button>
+          </span>
+        )}
+        {activeSkill && (
+          <span className="inline-flex items-center gap-1 text-[11px] bg-primary/10 border border-primary/30 text-primary rounded-full px-2 py-0.5">
+            <Zap className="w-3 h-3 shrink-0" />
+            {activeSkill.name}
+            <button
+              onClick={() => setActiveSkill(null)}
+              className="ml-0.5 hover:text-primary/60 transition-colors"
+              aria-label={`Remove ${activeSkill.name}`}
+            >
+              <X className="w-3 h-3" />
+            </button>
+          </span>
+        )}
+        {attachedFiles.map((f, i) => (
+          <span
+            key={i}
+            className="inline-flex items-center gap-1 text-[11px] bg-secondary border border-border text-foreground rounded-full px-2 py-0.5 max-w-[220px]"
+          >
+            <Paperclip className="w-3 h-3 shrink-0" />
+            <span className="truncate">{f.name}</span>
+            <span className="text-muted-foreground shrink-0 ml-0.5">{f.size}</span>
+            <button
+              onClick={() => removeFile(i)}
+              className="ml-0.5 text-muted-foreground hover:text-foreground transition-colors shrink-0"
+              aria-label={`Remove ${f.name}`}
+            >
+              <X className="w-3 h-3" />
+            </button>
+          </span>
+        ))}
+        {fileError && (
+          <span className="inline-flex items-center gap-1 text-[11px] text-destructive animate-fade-in">
+            <AlertCircle className="w-3 h-3 shrink-0" />
+            {fileError}
+          </span>
+        )}
+      </div>
+    ) : null;
 
   // Dropdown menu content (no tick marks, no blue highlighting)
   const PlusDropdown = () => {
-    const orgSkills = skills.filter(s => s.scope === 'org');
+    const orgSkills = skills.filter((s) => s.scope === "org");
     return (
       <DropdownMenuContent side="top" align="start" className="w-52">
-        <DropdownMenuItem onClick={() => { setWebSearchEnabled(v => !v); setShowPlus(false); }}>
+        <DropdownMenuItem
+          onClick={() => {
+            setWebSearchEnabled((v) => !v);
+            setShowPlus(false);
+          }}
+        >
           <Globe className="w-3.5 h-3.5 mr-2" />
           Web Search
         </DropdownMenuItem>
         <DropdownMenuItem
-          onClick={() => { if (!atFileLimit) fileInputRef.current?.click(); setShowPlus(false); }}
+          onClick={() => {
+            if (!atFileLimit) fileInputRef.current?.click();
+            setShowPlus(false);
+          }}
           disabled={atFileLimit}
         >
           <Paperclip className="w-3.5 h-3.5 mr-2" />
@@ -372,11 +457,14 @@ export function ChatView() {
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>Org Skills</DropdownMenuSubTrigger>
               <DropdownMenuSubContent className="w-48">
-                {orgSkills.map(skill => (
+                {orgSkills.map((skill) => (
                   <DropdownMenuItem
                     key={skill.id}
                     title={skill.description}
-                    onClick={() => { setActiveSkill(skill); setShowPlus(false); }}
+                    onClick={() => {
+                      setActiveSkill(skill);
+                      setShowPlus(false);
+                    }}
                   >
                     {skill.name}
                   </DropdownMenuItem>
@@ -392,7 +480,9 @@ export function ChatView() {
         </DropdownMenuSub>
         <div className="px-2 py-1.5 border-t border-border mt-0.5 space-y-0.5">
           <p className="text-[10px] text-muted-foreground">PDF, DOCX, PPTX, TXT, XLSX, PNG</p>
-          <p className="text-[10px] text-muted-foreground">Max {MAX_FILES} files · {MAX_FILE_SIZE_MB} MB each</p>
+          <p className="text-[10px] text-muted-foreground">
+            Max {MAX_FILES} files · {MAX_FILE_SIZE_MB} MB each
+          </p>
         </div>
       </DropdownMenuContent>
     );
@@ -407,21 +497,20 @@ export function ChatView() {
         className="hidden"
         onChange={handleFileChange}
         multiple
-        accept={ALLOWED_EXTENSIONS.join(',')}
+        accept={ALLOWED_EXTENSIONS.join(",")}
       />
 
       {/* Chat Header */}
-      {activeChat && activeSpace && (
-        <ChatHeader chat={activeChat} space={activeSpace} />
-      )}
+      {activeChat && activeSpace && <ChatHeader chat={activeChat} space={activeSpace} />}
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto argo-scrollbar flex flex-col">
-
         {/* ═══ Welcome Empty State ═══ */}
-        {isEmpty && (
-          isLoading ? (
-            <div className="max-w-4xl mx-auto w-full px-4 py-6"><ChatMessageSkeleton /></div>
+        {isEmpty &&
+          (isLoading ? (
+            <div className="max-w-4xl mx-auto w-full px-4 py-6">
+              <ChatMessageSkeleton />
+            </div>
           ) : (
             <div className="flex-1 flex flex-col justify-center px-4 py-6 w-full animate-fade-in">
               <div className="w-full max-w-xl mx-auto">
@@ -434,10 +523,12 @@ export function ChatView() {
                   <div className="flex items-end gap-2 px-3 py-2.5">
                     <DropdownMenu open={showPlus} onOpenChange={setShowPlus}>
                       <DropdownMenuTrigger asChild>
-                        <button className={cn(
-                          "p-1 rounded hover:bg-accent transition-colors",
-                          hasActiveTools ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                        )}>
+                        <button
+                          className={cn(
+                            "p-1 rounded hover:bg-accent transition-colors",
+                            hasActiveTools ? "text-primary" : "text-muted-foreground hover:text-foreground",
+                          )}
+                        >
                           <Plus className="w-4 h-4" />
                         </button>
                       </DropdownMenuTrigger>
@@ -455,7 +546,12 @@ export function ChatView() {
                     <button
                       onClick={handleSend}
                       disabled={!input.trim() || isTyping}
-                      className={cn("p-1.5 rounded-lg transition-colors", input.trim() && !isTyping ? "bg-primary text-primary-foreground hover:bg-primary/90" : "text-muted-foreground")}
+                      className={cn(
+                        "p-1.5 rounded-lg transition-colors",
+                        input.trim() && !isTyping
+                          ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                          : "text-muted-foreground",
+                      )}
                     >
                       <Send className="w-3.5 h-3.5" />
                     </button>
@@ -463,30 +559,38 @@ export function ChatView() {
                 </div>
               </div>
             </div>
-          )
-        )}
+          ))}
 
         <div className="max-w-4xl mx-auto w-full px-4 py-6">
           {activeChat?.messages.map((msg, idx) => (
             <div
               key={msg.id}
-              className={cn("mb-5 animate-fade-in flex group", msg.role === 'user' ? "justify-end" : "justify-start")}
+              className={cn("mb-5 animate-fade-in flex group", msg.role === "user" ? "justify-end" : "justify-start")}
               style={{ animationDelay: `${Math.min(idx * 50, 300)}ms` }}
             >
-              {msg.role === 'user' ? (
+              {msg.role === "user" ? (
                 <div className="flex flex-col items-end gap-1 max-w-[75%]">
                   <div className="bg-muted border border-border rounded-2xl px-4 py-2.5 text-sm text-foreground leading-[1.7] whitespace-pre-wrap">
                     {msg.content}
                   </div>
                   <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button onClick={() => navigator.clipboard.writeText(msg.content)} title="Copy" className="p-1 rounded hover:bg-accent text-muted-foreground hover:text-foreground transition-colors">
+                    <button
+                      onClick={() => navigator.clipboard.writeText(msg.content)}
+                      title="Copy"
+                      className="p-1 rounded hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
+                    >
                       <Copy className="w-3 h-3" />
                     </button>
                   </div>
                 </div>
               ) : (
-                <div className={cn("max-w-[85%]", msg.type === 'clarification' && "bg-secondary/40 border border-border/60 rounded-xl px-4 py-3")}>
-                  {msg.type === 'clarification' && (
+                <div
+                  className={cn(
+                    "max-w-[85%]",
+                    msg.type === "clarification" && "bg-secondary/40 border border-border/60 rounded-xl px-4 py-3",
+                  )}
+                >
+                  {msg.type === "clarification" && (
                     <div className="flex items-center gap-1.5 mb-2 text-[11px] font-medium text-muted-foreground uppercase tracking-wide">
                       <HelpCircle className="w-3 h-3" />
                       Clarification needed
@@ -494,17 +598,29 @@ export function ChatView() {
                   )}
                   <div className="text-sm text-foreground leading-[1.7] whitespace-pre-wrap">
                     {msg.content.split(/(\*\*.*?\*\*|\*.*?\*)/).map((part, i) => {
-                      if (part.startsWith('**') && part.endsWith('**')) return <strong key={i} className="font-bold">{part.slice(2, -2)}</strong>;
-                      if (part.startsWith('*') && part.endsWith('*')) return <em key={i} className="text-muted-foreground">{part.slice(1, -1)}</em>;
+                      if (part.startsWith("**") && part.endsWith("**"))
+                        return (
+                          <strong key={i} className="font-bold">
+                            {part.slice(2, -2)}
+                          </strong>
+                        );
+                      if (part.startsWith("*") && part.endsWith("*"))
+                        return (
+                          <em key={i} className="text-muted-foreground">
+                            {part.slice(1, -1)}
+                          </em>
+                        );
                       return <span key={i}>{part}</span>;
                     })}
                   </div>
-                  {msg.type === 'clarification' && msg.suggestions && msg.suggestions.length > 0 && (
+                  {msg.type === "clarification" && msg.suggestions && msg.suggestions.length > 0 && (
                     <div className="flex flex-wrap gap-2 mt-3">
                       {msg.suggestions.map((s, i) => (
                         <button
                           key={i}
-                          onClick={() => { if (!isTyping) sendMessage(s); }}
+                          onClick={() => {
+                            if (!isTyping) sendMessage(s);
+                          }}
                           disabled={isTyping}
                           className="border border-border rounded-full px-3 py-1 text-xs text-foreground hover:bg-accent transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                         >
@@ -514,41 +630,72 @@ export function ChatView() {
                     </div>
                   )}
                   {msg.trace && <ToolTrace trace={msg.trace} />}
-                  {msg.artifactId && (() => {
-                    const artTypeLabels: Record<string, string> = { 'markdown': 'Markdown', 'html': 'HTML', 'pptx-outline': 'PPTX Outline' };
-                    const linkedArtifact = artifacts.find(a => a.id === msg.artifactId);
-                    const artName = linkedArtifact?.name || 'Artifact';
-                    const artType = linkedArtifact ? (artTypeLabels[linkedArtifact.artifactType] || linkedArtifact.artifactType) : '';
-                    return (
-                      <button onClick={() => { setActiveArtifactId(msg.artifactId!); setRightPanelView('artifact'); }} className="inline-flex items-center gap-2 mt-3 px-3 py-1.5 rounded-lg border border-border bg-muted text-xs font-medium text-foreground hover:bg-accent transition-colors">
-                        {linkedArtifact && <span className="font-mono text-muted-foreground">v{linkedArtifact.version}</span>}
-                        {artName}
-                      </button>
-                    );
-                  })()}
-                  <div className={cn(
-                    "mt-2 flex items-center gap-0.5 transition-opacity",
-                    feedbackState[msg.id] ? "opacity-100" : "opacity-0 group-hover:opacity-100"
-                  )}>
-                    <button onClick={() => navigator.clipboard.writeText(msg.content)} title="Copy" className="p-1 rounded hover:bg-accent text-muted-foreground hover:text-foreground transition-colors">
+                  {msg.artifactId &&
+                    (() => {
+                      const artTypeLabels: Record<string, string> = {
+                        markdown: "Markdown",
+                        html: "HTML",
+                        "pptx-outline": "PPTX Outline",
+                      };
+                      const linkedArtifact = artifacts.find((a) => a.id === msg.artifactId);
+                      const artName = linkedArtifact?.name || "Artifact";
+                      const artType = linkedArtifact
+                        ? artTypeLabels[linkedArtifact.artifactType] || linkedArtifact.artifactType
+                        : "";
+                      return (
+                        <button
+                          onClick={() => {
+                            setActiveArtifactId(msg.artifactId!);
+                            setRightPanelView("artifact");
+                          }}
+                          className="inline-flex items-center gap-2 mt-3 px-3 py-1.5 rounded-lg border border-border bg-muted text-xs font-medium text-foreground hover:bg-accent transition-colors"
+                        >
+                          {linkedArtifact && (
+                            <span className="font-mono text-muted-foreground">v{linkedArtifact.version}</span>
+                          )}
+                          {artName}
+                        </button>
+                      );
+                    })()}
+                  <div
+                    className={cn(
+                      "mt-2 flex items-center gap-0.5 transition-opacity",
+                      feedbackState[msg.id] ? "opacity-100" : "opacity-0 group-hover:opacity-100",
+                    )}
+                  >
+                    <button
+                      onClick={() => navigator.clipboard.writeText(msg.content)}
+                      title="Copy"
+                      className="p-1 rounded hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
+                    >
                       <Copy className="w-3 h-3" />
                     </button>
                     <button
                       onClick={() => handleThumbsUp(msg.id)}
-                      className={cn("p-1 rounded hover:bg-accent transition-colors", feedbackState[msg.id] === 'up' ? "text-green-500" : "text-muted-foreground hover:text-foreground")}
+                      className={cn(
+                        "p-1 rounded hover:bg-accent transition-colors",
+                        feedbackState[msg.id] === "up"
+                          ? "text-green-500"
+                          : "text-muted-foreground hover:text-foreground",
+                      )}
                       title="Good response"
                     >
                       <ThumbsUp className="w-3 h-3" />
                     </button>
                     <button
                       onClick={() => handleThumbsDown(msg.id)}
-                      className={cn("p-1 rounded hover:bg-accent transition-colors", feedbackState[msg.id] === 'down' ? "text-destructive" : "text-muted-foreground hover:text-foreground")}
+                      className={cn(
+                        "p-1 rounded hover:bg-accent transition-colors",
+                        feedbackState[msg.id] === "down"
+                          ? "text-destructive"
+                          : "text-muted-foreground hover:text-foreground",
+                      )}
                       title="Poor response"
                     >
                       <ThumbsDown className="w-3 h-3" />
                     </button>
                   </div>
-                  {showFeedbackInput === msg.id && feedbackState[msg.id] === 'down' && (
+                  {showFeedbackInput === msg.id && feedbackState[msg.id] === "down" && (
                     <div className="mt-2 max-w-sm animate-fade-in bg-muted border border-border rounded-lg p-3 space-y-2">
                       <div className="flex items-center justify-between">
                         <p className="text-xs font-medium text-foreground">What went wrong?</p>
@@ -561,13 +708,18 @@ export function ChatView() {
                         </button>
                       </div>
                       <textarea
-                        value={feedbackComment[msg.id] || ''}
-                        onChange={e => { if (e.target.value.length <= 200) setFeedbackComment(prev => ({ ...prev, [msg.id]: e.target.value })); }}
+                        value={feedbackComment[msg.id] || ""}
+                        onChange={(e) => {
+                          if (e.target.value.length <= 200)
+                            setFeedbackComment((prev) => ({ ...prev, [msg.id]: e.target.value }));
+                        }}
                         placeholder="Help us improve — describe what didn't work…"
                         rows={2}
                         className="w-full text-xs bg-background border border-border rounded-md px-2.5 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring resize-none"
                       />
-                      <p className="text-[10px] text-muted-foreground text-right -mt-1">{(feedbackComment[msg.id] || '').length}/200</p>
+                      <p className="text-[10px] text-muted-foreground text-right -mt-1">
+                        {(feedbackComment[msg.id] || "").length}/200
+                      </p>
                       <div className="flex justify-end gap-2">
                         <button
                           onClick={() => setShowFeedbackInput(null)}
@@ -608,7 +760,10 @@ export function ChatView() {
           <div className="max-w-4xl mx-auto flex items-center gap-2 px-3 py-2 rounded-lg bg-destructive/10 border border-destructive/20 text-xs text-destructive">
             <AlertCircle className="w-3.5 h-3.5 shrink-0" />
             <span>{sendError}</span>
-            <button onClick={() => setSendError(null)} className="ml-auto p-0.5 rounded hover:bg-destructive/20 transition-colors">
+            <button
+              onClick={() => setSendError(null)}
+              className="ml-auto p-0.5 rounded hover:bg-destructive/20 transition-colors"
+            >
               <X className="w-3 h-3" />
             </button>
           </div>
@@ -624,10 +779,12 @@ export function ChatView() {
               <div className="flex items-end gap-2 px-3 py-2.5">
                 <DropdownMenu open={showPlus} onOpenChange={setShowPlus}>
                   <DropdownMenuTrigger asChild>
-                    <button className={cn(
-                      "p-1 rounded hover:bg-accent transition-colors",
-                      hasActiveTools ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                    )}>
+                    <button
+                      className={cn(
+                        "p-1 rounded hover:bg-accent transition-colors",
+                        hasActiveTools ? "text-primary" : "text-muted-foreground hover:text-foreground",
+                      )}
+                    >
                       <Plus className="w-4 h-4" />
                     </button>
                   </DropdownMenuTrigger>
@@ -645,7 +802,12 @@ export function ChatView() {
                 <button
                   onClick={handleSend}
                   disabled={!input.trim() || isTyping}
-                  className={cn("p-1.5 rounded-lg transition-colors", input.trim() && !isTyping ? "bg-primary text-primary-foreground hover:bg-primary/90" : "text-muted-foreground")}
+                  className={cn(
+                    "p-1.5 rounded-lg transition-colors",
+                    input.trim() && !isTyping
+                      ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                      : "text-muted-foreground",
+                  )}
                 >
                   <Send className="w-3.5 h-3.5" />
                 </button>
