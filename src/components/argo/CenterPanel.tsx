@@ -283,6 +283,7 @@ export function CenterPanel() {
   if (centerView === 'new-space') return wrap(<CreateSpaceView />);
   if (centerView === 'projects') return wrap(<WorkspaceDashboard />);
   if (centerView === 'space-workspace') return wrap(<SpaceWorkspaceView />);
+  if (centerView === 'skills') return wrap(<SkillsView />);
 
   // ChatView has its own header — don't double-wrap
   return (
